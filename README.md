@@ -1,15 +1,7 @@
-# Welcome to your CDK TypeScript project
+# nodejs-aws-shop-backend
 
-You should explore the contents of this project. It demonstrates a CDK app with an instance of a stack (`NodejsAwsShopBackendStack`)
-which contains an Amazon SQS queue that is subscribed to an Amazon SNS topic.
+[Link to Product Service API](https://ic4qlwt2a5.execute-api.eu-west-1.amazonaws.com)
+[/products](https://ic4qlwt2a5.execute-api.eu-west-1.amazonaws.com/products)
+[/products/{productId}](https://ic4qlwt2a5.execute-api.eu-west-1.amazonaws.com/products/6ec0bd7f-11c0-43da-975e-2a8ad9ebae02) - example
 
-The `cdk.json` file tells the CDK Toolkit how to execute your app.
-
-## Useful commands
-
-* `npm run build`   compile typescript to js
-* `npm run watch`   watch for changes and compile
-* `npm run test`    perform the jest unit tests
-* `cdk deploy`      deploy this stack to your default AWS account/region
-* `cdk diff`        compare deployed stack with current state
-* `cdk synth`       emits the synthesized CloudFormation template
+Swagger documentation openapi.yaml is in the product-service folder
