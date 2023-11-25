@@ -4,23 +4,18 @@ import {
   TransactWriteItemsCommand,
   AttributeValue,
 } from "@aws-sdk/client-dynamodb";
-import { PutCommand, DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
+import { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
 import { AvailableProduct, AvailableProductSchema } from "../models/Product";
-import * as Yup from "yup";
 
 const dynamodbClient = new DynamoDBClient({
   region: process.env.PRODUCT_AWS_REGION,
 });
-const docDynamodbClient = DynamoDBDocumentClient.from(dynamodbClient);
 
 export const getProductsList = async () => {
   try {
     const productsParams = {
       TableName: "products",
     };
-
-    console.log("productsParams", productsParams);
-
     const productsData = await dynamodbClient.send(
       new ScanCommand(productsParams)
     );
@@ -28,8 +23,8 @@ export const getProductsList = async () => {
     const stocksParams = {
       TableName: "stocks",
     };
-
     const stocksData = await dynamodbClient.send(new ScanCommand(stocksParams));
+    
     const stocksMap: { [key: string]: number } = {};
 
     if (stocksData.Items) {
@@ -52,8 +47,6 @@ export const getProductsList = async () => {
         };
       }) || [];
 
-    console.log("joinedData", joinedData);
-
     return joinedData;
   } catch (err) {
     throw err;
@@ -63,12 +56,6 @@ export const getProductsList = async () => {
 export const createProduct = async (newProduct: AvailableProduct) => {
   try {
     await AvailableProductSchema.validate(newProduct);
-    // .then((validatedData) => console.log("Valid data:", validatedData))
-    // .catch((validationError) => {
-    //   console.error("Validation error:", validationError.errors);
-    //   // throw new Error("Validation error");
-    //   throw validationError;
-    // });
 
     const { id, title, description, price, count = 0 } = newProduct;
 
@@ -103,42 +90,14 @@ export const createProduct = async (newProduct: AvailableProduct) => {
       ],
     };
 
-    // const productsCommand = new PutCommand({
-    //   TableName: "products",
-    //   Item: {
-    //     id,
-    //     title,
-    //     description,
-    //     price,
-    //   },
-    // });
-
-    // const stocksCommand = new PutCommand({
-    //   TableName: "stocks",
-    //   Item: {
-    //     product_id: id,
-    //     count,
-    //   },
-    // });
-
     try {
       const command = new TransactWriteItemsCommand(params);
-      const transactionOutput = await dynamodbClient.send(command);
-      console.log("Transaction successful: Product and Stock created.");
-      return { success: true, transactionOutput };
-      // const responseProduct = await docDynamodbClient.send(productsCommand);
-      // const responseStocks = await docDynamodbClient.send(stocksCommand);
-      // console.log('responseProduct', responseProduct);
-      // console.log('responseStocks', responseStocks);
-      // return {
-      //   responseProduct,
-      //   responseStocks,
-      // };
+      await dynamodbClient.send(command);
+      return { success: true };
     } catch (err) {
       throw err;
     }
   } catch (validationError) {
-    console.error("Validation error:", validationError);
     throw {
       errorName: "ValidationError",
       error: validationError,
