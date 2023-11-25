@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from "uuid";
 export const handler = async (event: any) => {
   try {
     console.log("event from createProduct", event);
+    
     const newProduct = {
       id: uuidv4(),
       ...JSON.parse(event.body),

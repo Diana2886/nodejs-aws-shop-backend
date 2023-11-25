@@ -1,10 +1,13 @@
 import { buildResponse } from "../utils";
-import { PRODUCTS } from "../constants";
+import { getProductsList } from "../db/products";
+import { Product } from "../types/product.interface";
 
 export const handler = async (event: any) => {
   try {
     console.log("event from getProductById", event);
-    const product = PRODUCTS.find(
+    
+    const products: Product[] = await getProductsList()
+    const product = products.find(
       (item) => item.id === event.pathParameters.productId
     );
 
@@ -14,9 +17,7 @@ export const handler = async (event: any) => {
       });
     }
 
-    return buildResponse(200, {
-      product,
-    });
+    return buildResponse(200, product);
   } catch (err: any) {
     return buildResponse(500, {
       message: err.message,
