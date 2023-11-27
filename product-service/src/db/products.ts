@@ -4,7 +4,6 @@ import {
   TransactWriteItemsCommand,
   AttributeValue,
 } from "@aws-sdk/client-dynamodb";
-import { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
 import { AvailableProduct, AvailableProductSchema } from "../models/Product";
 
 const dynamodbClient = new DynamoDBClient({
@@ -58,6 +57,21 @@ export const createProduct = async (newProduct: AvailableProduct) => {
     await AvailableProductSchema.validate(newProduct);
 
     const { id, title, description, price, count = 0 } = newProduct;
+
+    if (typeof price !== 'number' || typeof count !== 'number') {
+      const errors = [];
+      if (typeof price !== 'number') {
+        errors.push('Price must be a number');
+      }
+      if (typeof count !== 'number') {
+        errors.push('Count must be a number');
+      }
+      
+      throw {
+        errorName: "ValidationError",
+        errors: errors
+      };
+    }
 
     const productItem: Record<string, AttributeValue> = {
       id: { S: id },
