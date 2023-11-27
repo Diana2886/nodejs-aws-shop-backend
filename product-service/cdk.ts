@@ -32,13 +32,13 @@ const sharedLambdaProps: Partial<NodejsFunctionProps> = {
 
 const productsScanPolicy  = new iam.PolicyStatement({
   effect: iam.Effect.ALLOW,
-  actions: ['dynamodb:Scan', 'dynamodb:PutItem'],
+  actions: ['dynamodb:Scan', 'dynamodb:PutItem', 'dynamodb:Query'],
   resources: [`arn:aws:dynamodb:${process.env.PRODUCT_AWS_REGION}:${process.env.ACCOUNT_ID}:table/${process.env.PRODUCTS_TABLE_NAME}`],
 });
 
 const stocksScanPolicy = new iam.PolicyStatement({
   effect: iam.Effect.ALLOW,
-  actions: ['dynamodb:Scan', 'dynamodb:PutItem'],
+  actions: ['dynamodb:Scan', 'dynamodb:PutItem', 'dynamodb:Query'],
   resources: [`arn:aws:dynamodb:${process.env.PRODUCT_AWS_REGION}:${process.env.ACCOUNT_ID}:table/${process.env.STOCKS_TABLE_NAME}`],
 });
 
