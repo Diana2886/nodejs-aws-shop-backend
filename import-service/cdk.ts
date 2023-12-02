@@ -50,8 +50,11 @@ bucket.grantRead(importFileParser);
 
 const importPolicy = new iam.PolicyStatement({
   effect: iam.Effect.ALLOW,
-  actions: ["s3:GetObject", 's3:PutObject', 's3:PutBucketCors'],
-  resources: ["arn:aws:s3:::nodejs-aws-shop-import-service/uploaded/*", "arn:aws:s3:::nodejs-aws-shop-import-service"],
+  actions: ["s3:*"],
+  resources: [
+    "arn:aws:s3:::nodejs-aws-shop-import-service",
+    "arn:aws:s3:::nodejs-aws-shop-import-service/*",
+  ],
 });
 
 importProductsFile.addToRolePolicy(importPolicy);

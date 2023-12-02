@@ -7,7 +7,7 @@ import {
 import csv from "csv-parser";
 import { Readable } from "node:stream";
 
-const processCSV = async (
+export const processCSV = async (
   Body: any,
   bucket: string,
   key: string,

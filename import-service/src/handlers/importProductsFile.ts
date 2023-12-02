@@ -1,5 +1,8 @@
-// import * as AWS from "aws-sdk";
-import { S3Client, PutBucketCorsCommand, PutObjectCommand } from "@aws-sdk/client-s3";
+import {
+  S3Client,
+  PutBucketCorsCommand,
+  PutObjectCommand,
+} from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 export const handler = async (event: any) => {
@@ -22,6 +25,7 @@ export const handler = async (event: any) => {
   };
   const command = new PutBucketCorsCommand(input);
   const response = await s3.send(command);
+  console.log('PutResponse', response)
 
   const { name } = event.queryStringParameters;
 
@@ -33,26 +37,11 @@ export const handler = async (event: any) => {
 
   let statusCode = 200;
   let body: Object | unknown = {};
-  //   let productsFiles = [];
-  //   const params = {
-  //     Bucket: BUCKET,
-  //     Prefix: "uploaded/",
-  //   };
 
   try {
     const command = new PutObjectCommand(params);
     const signedUrl = await getSignedUrl(s3, command, { expiresIn: 60 });
     body = JSON.stringify(signedUrl);
-    // const s3Response = await s3.listObjectsV2(params).promise();
-    // productsFiles = s3Response.Contents!;
-    // body = JSON.stringify(
-    //   productsFiles
-    //     .filter((productFile) => productFile.Size)
-    //     .map(
-    //       (productsFile) =>
-    //         `https://${BUCKET}.s3.amazonaws.com/${productsFile.Key}`
-    //     )
-    // );
   } catch (error) {
     statusCode = 500;
     console.log("Error appears:", error);
