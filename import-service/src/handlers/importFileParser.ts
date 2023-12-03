@@ -50,8 +50,9 @@ export const processCSV = async (
 };
 
 export const handler = async (event: any) => {
-  const s3 = new S3Client({ region: process.env.PRODUCT_AWS_REGION });
+  console.log("Event:", event);
 
+  const s3 = new S3Client({ region: process.env.PRODUCT_AWS_REGION });
   for (const record of event.Records) {
     const bucket = record.s3.bucket.name;
     const key = decodeURIComponent(record.s3.object.key.replace(/\+/g, " "));

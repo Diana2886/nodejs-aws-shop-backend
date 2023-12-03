@@ -25,7 +25,6 @@ export const handler = async (event: any) => {
   };
   const command = new PutBucketCorsCommand(input);
   const response = await s3.send(command);
-  console.log('PutResponse', response)
 
   const { name } = event.queryStringParameters;
 
