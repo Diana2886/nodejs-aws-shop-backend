@@ -1,0 +1,42 @@
+openapi: 3.0.0
+info:
+  title: Import Service API
+  version: 1.0.0
+  description: API for importing files and processing them
+
+paths:
+  /import:
+    get:
+      summary: Endpoint to import products file
+      parameters:
+        - name: name
+          in: query
+          required: true
+          schema:
+            type: string
+            description: CSV file name
+      responses:
+        '200':
+          description: Successful response
+          content:
+            text/plain:
+              schema:
+                type: string
+                description: Signed URL to upload file
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Description of the error
+
+components:
+  securitySchemes:
+    apiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
