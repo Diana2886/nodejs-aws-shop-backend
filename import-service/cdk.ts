@@ -10,6 +10,7 @@ import "dotenv/config";
 import * as iam from "aws-cdk-lib/aws-iam";
 import * as s3 from "aws-cdk-lib/aws-s3";
 import * as s3notifications from "aws-cdk-lib/aws-s3-notifications";
+import * as sqs from "aws-cdk-lib/aws-sqs";
 
 const app = new cdk.App();
 
@@ -22,6 +23,8 @@ const bucket = s3.Bucket.fromBucketName(
   "ImportBucket",
   "nodejs-aws-shop-import-service"
 );
+
+const queue = sqs.Queue.fromQueueArn(stack, 'CatalogItemsQueue', process.env.CATALOG_ITEMS_QUEUE_ARN!)
 
 const sharedLambdaProps: Partial<NodejsFunctionProps> = {
   runtime: lambda.Runtime.NODEJS_18_X,
@@ -59,6 +62,8 @@ const importPolicy = new iam.PolicyStatement({
 
 importProductsFile.addToRolePolicy(importPolicy);
 importFileParser.addToRolePolicy(importPolicy);
+
+queue.grantSendMessages(importFileParser);
 
 bucket.addEventNotification(
   s3.EventType.OBJECT_CREATED,

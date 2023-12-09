@@ -6,6 +6,9 @@ import {
 } from "@aws-sdk/client-s3";
 import csv from "csv-parser";
 import { Readable } from "node:stream";
+import { SQSClient, SendMessageCommand } from "@aws-sdk/client-sqs";
+
+const sqs = new SQSClient({ region: process.env.PRODUCT_AWS_REGION });
 
 export const processCSV = async (
   Body: any,
@@ -16,8 +19,17 @@ export const processCSV = async (
   return new Promise<void>((resolve, reject) => {
     const stream = Readable.from(Body)
       .pipe(csv())
-      .on("data", (data) => {
-        console.log("Parsed CSV record:", data);
+      .on("data", async (data) => {
+        try {
+          const params = {
+            QueueUrl:
+              "https://sqs.eu-west-1.amazonaws.com/771895814867/catalog-items-queue",
+            MessageBody: JSON.stringify(data),
+          };
+          await sqs.send(new SendMessageCommand(params));
+        } catch (err) {
+          console.error("Error sending message to SQS:", err);
+        }
       })
       .on("error", (error) => {
         console.error("CSV parsing error:", error);
