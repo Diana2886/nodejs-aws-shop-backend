@@ -6,7 +6,8 @@ import {
 } from "@aws-sdk/client-s3";
 import csv from "csv-parser";
 import { Readable } from "node:stream";
-import { SQSClient, SendMessageCommand } from "@aws-sdk/client-sqs";
+import { SQSClient, SendMessageBatchCommand } from "@aws-sdk/client-sqs";
+import { AvailableProduct } from "../types/availableProduct.interface";
 
 const sqs = new SQSClient({ region: process.env.PRODUCT_AWS_REGION });
 
@@ -17,19 +18,12 @@ export const processCSV = async (
   s3: S3Client
 ) => {
   return new Promise<void>((resolve, reject) => {
+    const parsedDataArray: AvailableProduct[] = [];
+
     const stream = Readable.from(Body)
       .pipe(csv())
       .on("data", async (data) => {
-        try {
-          const params = {
-            QueueUrl:
-              "https://sqs.eu-west-1.amazonaws.com/771895814867/catalog-items-queue",
-            MessageBody: JSON.stringify(data),
-          };
-          await sqs.send(new SendMessageCommand(params));
-        } catch (err) {
-          console.error("Error sending message to SQS:", err);
-        }
+        parsedDataArray.push(data);
       })
       .on("error", (error) => {
         console.error("CSV parsing error:", error);
@@ -38,6 +32,17 @@ export const processCSV = async (
       .on("end", async () => {
         try {
           console.log("CSV parsing complete");
+
+          const params = {
+            QueueUrl:
+              "https://sqs.eu-west-1.amazonaws.com/771895814867/catalog-items-queue",
+            Entries: parsedDataArray.map((data, index) => ({
+              Id: `${index}`,
+              MessageBody: JSON.stringify(data),
+            })),
+          };
+
+          await sqs.send(new SendMessageBatchCommand(params));
 
           const copyParams = {
             Bucket: bucket,
