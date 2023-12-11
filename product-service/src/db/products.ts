@@ -8,6 +8,7 @@ import { QueryCommand, DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
 import { AvailableProduct, AvailableProductSchema } from "../models/Product";
 import { Stock } from "../types/stock.interface";
 import { Product } from "../types/product.interface";
+import { v4 as uuidv4 } from "uuid";
 
 const dynamodbClient = new DynamoDBClient({
   region: process.env.PRODUCT_AWS_REGION,
@@ -99,9 +100,10 @@ export const createProduct = async (newProduct: AvailableProduct) => {
   try {
     await AvailableProductSchema.validate(newProduct);
 
-    const { id, title, description } = newProduct;
+    const { title, description } = newProduct;
     const price = Number(newProduct.price);
     const count = Number(newProduct.count) || 0;
+    const id = newProduct.id || uuidv4();
 
     const productItem: Record<string, AttributeValue> = {
       id: { S: id },
