@@ -1,0 +1,136 @@
+import {
+  DynamoDBClient,
+  BatchWriteItemCommand,
+} from "@aws-sdk/client-dynamodb";
+
+const client = new DynamoDBClient({ region: process.env.PRODUCT_AWS_REGION });
+
+const params = {
+  RequestItems: {
+    products: [
+      {
+        PutRequest: {
+          Item: {
+            id: { S: "1a2b3c4d-1234-5678-abcd-1234567890ab" },
+            title: { S: "The Great Gatsby" },
+            description: { S: "A classic novel by F. Scott Fitzgerald" },
+            price: { N: "12" },
+          },
+        },
+      },
+      {
+        PutRequest: {
+          Item: {
+            id: { S: "2b3c4d5e-2345-6789-bcde-234567890abc" },
+            title: { S: "To Kill a Mockingbird" },
+            description: { S: "Harper Lee's timeless masterpiece" },
+            price: { N: "10" },
+          },
+        },
+      },
+      {
+        PutRequest: {
+          Item: {
+            id: { S: "3c4d5e6f-3456-7890-cdef-34567890abcd" },
+            title: { S: "1984" },
+            description: { S: "George Orwell's dystopian classic" },
+            price: { N: "9" },
+          },
+        },
+      },
+      {
+        PutRequest: {
+          Item: {
+            id: { S: "4d5e6f7g-4567-8901-defa-4567890abcde" },
+            title: { S: "Pride and Prejudice" },
+            description: { S: "Jane Austen's beloved romantic novel" },
+            price: { N: "11" },
+          },
+        },
+      },
+      {
+        PutRequest: {
+          Item: {
+            id: { S: "5e6f7g8h-5678-9012-efab-567890abcdef" },
+            title: { S: "The Catcher in the Rye" },
+            description: {
+              S: "J.D. Salinger's classic coming-of-age novel",
+            },
+            price: { N: "8" },
+          },
+        },
+      },
+      {
+        PutRequest: {
+          Item: {
+            id: { S: "6f7g8h9i-6789-0123-fabc-6789012345ab" },
+            title: { S: "Lord of the Rings" },
+            description: { S: "J.R.R. Tolkien's epic fantasy trilogy" },
+            price: { N: "19" },
+          },
+        },
+      },
+    ],
+    stocks: [
+      {
+        PutRequest: {
+          Item: {
+            product_id: { S: "1a2b3c4d-1234-5678-abcd-1234567890ab" },
+            count: { N: "5" },
+          },
+        },
+      },
+      {
+        PutRequest: {
+          Item: {
+            product_id: { S: "2b3c4d5e-2345-6789-bcde-234567890abc" },
+            count: { N: "3" },
+          },
+        },
+      },
+      {
+        PutRequest: {
+          Item: {
+            product_id: { S: "3c4d5e6f-3456-7890-cdef-34567890abcd" },
+            count: { N: "2" },
+          },
+        },
+      },
+      {
+        PutRequest: {
+          Item: {
+            product_id: { S: "4d5e6f7g-4567-8901-defa-4567890abcde" },
+            count: { N: "4" },
+          },
+        },
+      },
+      {
+        PutRequest: {
+          Item: {
+            product_id: { S: "5e6f7g8h-5678-9012-efab-567890abcdef" },
+            count: { N: "5" },
+          },
+        },
+      },
+      {
+        PutRequest: {
+          Item: {
+            product_id: { S: "6f7g8h9i-6789-0123-fabc-6789012345ab" },
+            count: { N: "2" },
+          },
+        },
+      },
+    ],
+  },
+};
+
+const command = new BatchWriteItemCommand(params);
+
+client
+  .send(command)
+  .then((data) => {
+    console.log("Items added successfully:", data);
+  })
+  .catch((error) => {
+    console.error("Error adding items:", error);
+  });

@@ -17,8 +17,11 @@
   "devDependencies": {
     "@aws-cdk/aws-apigatewayv2-alpha": "^2.109.0-alpha.0",
     "@aws-cdk/aws-apigatewayv2-integrations-alpha": "^2.109.0-alpha.0",
+    "@aws-sdk/client-dynamodb": "^3.454.0",
+    "@aws-sdk/lib-dynamodb": "^3.454.0",
     "@types/jest": "^29.5.8",
     "@types/node": "20.9.0",
+    "@types/uuid": "^9.0.7",
     "aws-cdk": "2.108.1",
     "cdk": "^2.109.0",
     "dotenv": "^16.3.1",
@@ -29,6 +32,8 @@
   },
   "dependencies": {
     "aws-cdk-lib": "2.108.1",
-    "constructs": "^10.0.0"
+    "constructs": "^10.0.0",
+    "uuid4": "^2.0.3",
+    "yup": "^1.3.2"
   }
 }

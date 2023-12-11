@@ -1,11 +1,14 @@
 # nodejs-aws-shop-backend
 
-[Link to Product Service API](https://ic4qlwt2a5.execute-api.eu-west-1.amazonaws.com)
+[The link to CloudFront](https://d2za0p8r8k37bf.cloudfront.net/)
 
-[/products](https://ic4qlwt2a5.execute-api.eu-west-1.amazonaws.com/products)
+Links to Product Service API: [/products](https://ic4qlwt2a5.execute-api.eu-west-1.amazonaws.com/products)
 
-[/products/{productId}](https://ic4qlwt2a5.execute-api.eu-west-1.amazonaws.com/products/6ec0bd7f-11c0-43da-975e-2a8ad9ebae02) - example
+[/products/{productId}](https://ic4qlwt2a5.execute-api.eu-west-1.amazonaws.com/products/1a2b3c4d-1234-5678-abcd-1234567890ab) - example
 
 Swagger documentation openapi.yaml is in the product-service folder
 
-[The link to CloudFront](https://d2za0p8r8k37bf.cloudfront.net/)
+The SDK script for filling tables with test examples is in the src/db/dynamodb-data/fillTables.ts file
+(I also tried to fill data using ./script.json file by running the following CLI command:
+aws dynamodb batch-write-item --request-items file://script.json
+Both methods are working)

@@ -30,6 +30,34 @@ paths:
                     type: string
                     example: Internal Server Error occurred
 
+    post:
+      summary: Create a new product
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewProduct'
+      responses:
+        '200':
+          description: Product created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '400':
+          description: ValidationError
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
   /products/{productId}:
     parameters:
       - name: productId
@@ -87,3 +115,29 @@ components:
         price:
           type: number
           description: The price of the product
+
+    NewProduct:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier for the product
+        title:
+          type: string
+          description: The title of the product
+        description:
+          type: string
+          description: The description of the product
+        price:
+          type: number
+          description: The price of the product
+        count:
+          type: number
+          description: The count of the product
+
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Error message
