@@ -44,16 +44,21 @@ export const processCSV = async (
 
           await sqs.send(new SendMessageBatchCommand(params));
 
+          const encodedKey = encodeURIComponent(key);
+          const parsedKey = encodedKey.replace("uploaded", "parsed");
+          const decodedKey = decodeURIComponent(parsedKey);
+          const decodedKeyForDelete = decodeURIComponent(encodedKey);
+          
           const copyParams = {
             Bucket: bucket,
-            CopySource: `${bucket}/${key}`,
-            Key: key.replace("uploaded", "parsed"),
+            CopySource: `${bucket}/${encodedKey}`,
+            Key: decodedKey,
           };
           await s3.send(new CopyObjectCommand(copyParams));
 
           const deleteParams = {
             Bucket: bucket,
-            Key: key,
+            Key: decodedKeyForDelete,
           };
           await s3.send(new DeleteObjectCommand(deleteParams));
 
