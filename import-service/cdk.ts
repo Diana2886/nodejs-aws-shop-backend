@@ -90,39 +90,19 @@ const api = new apiGateway.HttpApi(stack, "ImportApi", {
   },
 });
 
-// const basicAuthorizerLambdaArn = `arn:aws:lambda:${
-//   cdk.Stack.of(stack).region
-// }:${cdk.Stack.of(stack).account}:function:basicAuthorizer`;
-
-console.log('Basic Authorizer Lambda ARN:', process.env.BASIC_AUTHORIZER_LAMBDA_ARN);
-
-
-const basicAuthorizer = lambda.Function.fromFunctionArn(
+const basicAuthorizer = lambda.Function.fromFunctionName(
   stack,
-  "BasicAuthorizerLambda",
-  process.env.BASIC_AUTHORIZER_LAMBDA_ARN!
+  "ImportBasicAuthorizerLambda",
+  "basicAuthorizer"
 );
-
-// const lambdaInvokePolicy = new iam.PolicyStatement({
-//   actions: ['lambda:InvokeFunction'],
-//   effect: iam.Effect.ALLOW,
-//   resources: [basicAuthorizer.functionArn],
-//   principals: [new iam.ServicePrincipal('apigateway.amazonaws.com')],
-// });
-
-// console.log('basicAuthorizer.functionArn', basicAuthorizer.functionArn)
-
-// basicAuthorizer.addToRolePolicy(lambdaInvokePolicy);
 
 const authorizer = new HttpLambdaAuthorizer(
-  "HttpLambdaAuthorizer",
+  "BasicAuthorizer",
   basicAuthorizer,
   {
-    responseTypes: [HttpLambdaResponseType.SIMPLE],
+    responseTypes: [HttpLambdaResponseType.IAM],
   }
 );
-
-console.log('authorizer', authorizer)
 
 api.addRoutes({
   integration: new HttpLambdaIntegration(
@@ -131,5 +111,5 @@ api.addRoutes({
   ),
   path: "/import",
   methods: [apiGateway.HttpMethod.GET],
-  authorizer: authorizer,
+  authorizer,
 });

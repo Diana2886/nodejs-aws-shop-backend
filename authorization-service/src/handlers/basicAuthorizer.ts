@@ -1,15 +1,11 @@
-export const handler = async (event: any /* , ctx: any, cb: any */) => {
-  console.log("Event:", event /* , ctx, cb */);
+export const handler = async (event: any, ctx: any, cb: any) => {
+  console.log("Event:", event, ctx, cb);
 
   const authorizationHeader = event.headers?.authorization;
   console.log("authorizationHeader", authorizationHeader);
 
   if (!authorizationHeader) {
-    // cb("Unauthorized");
-    return {
-      statusCode: 401,
-      body: "Unauthorized",
-    };
+    cb("Unauthorized");
   }
 
   try {
@@ -26,22 +22,14 @@ export const handler = async (event: any /* , ctx: any, cb: any */) => {
     const effect =
       !storedUserPassword || storedUserPassword !== password ? "Deny" : "Allow";
 
-    const policy = generatePolicy(encodedCredentials, event.routeArn, effect);
+    const policy = generatePolicy(encodedCredentials, event.methodArn, effect);
 
-    console.log("event.invokedFunctionArn", event.routeArn);
+    console.log("event.invokedFunctionArn", event.methodArn);
     console.log("policy", JSON.stringify(policy));
 
-    // cb(null, policy);
-    return {
-      statusCode: 200,
-      body: policy,
-    };
+    cb(null, policy);
   } catch (err: any) {
-    // cb(`Unauthorized: ${err.message}`);
-    return {
-      statusCode: 403,
-      body: `Unauthorized: ${err.message}`,
-    };
+    cb(`Unauthorized: ${err.message}`);
   }
 };
 
@@ -58,8 +46,7 @@ const generatePolicy = (
         {
           Action: "execute-api:Invoke",
           Effect: effect,
-          // Resource: resource,
-          Resource: 'arn:aws:execute-api:eu-west-1:771895814867:wo9elbcrc1/GET/import',
+          Resource: resource,
         },
       ],
     },
