@@ -1,6 +1,5 @@
 import { buildResponse } from "../utils";
 import { createProduct } from "../db/products";
-import { v4 as uuidv4 } from "uuid";
 import { AvailableProduct } from "../types/availableProduct.interface";
 
 export const handler = async (event: any) => {
@@ -8,7 +7,6 @@ export const handler = async (event: any) => {
     console.log("event from createProduct", event);
 
     const newProduct: AvailableProduct = {
-      id: uuidv4(),
       ...JSON.parse(event.body),
     };
     await createProduct(newProduct);

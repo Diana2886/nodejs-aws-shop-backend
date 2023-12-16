@@ -1,6 +1,5 @@
 import { buildResponse } from "../utils";
-import { getProductById, getProductsList } from "../db/products";
-import { AvailableProduct } from "../types/availableProduct.interface";
+import { getProductById } from "../db/products";
 
 export const handler = async (event: any) => {
   try {
