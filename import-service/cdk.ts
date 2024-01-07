@@ -1,5 +1,5 @@
-import * as apiGateway from "@aws-cdk/aws-apigatewayv2-alpha";
-import { HttpLambdaIntegration } from "@aws-cdk/aws-apigatewayv2-integrations-alpha";
+import * as apiGateway from "aws-cdk-lib/aws-apigatewayv2";
+import { HttpLambdaIntegration } from "aws-cdk-lib/aws-apigatewayv2-integrations";
 import * as cdk from "aws-cdk-lib";
 import * as lambda from "aws-cdk-lib/aws-lambda";
 import {
@@ -11,6 +11,10 @@ import * as iam from "aws-cdk-lib/aws-iam";
 import * as s3 from "aws-cdk-lib/aws-s3";
 import * as s3notifications from "aws-cdk-lib/aws-s3-notifications";
 import * as sqs from "aws-cdk-lib/aws-sqs";
+import {
+  HttpLambdaAuthorizer,
+  HttpLambdaResponseType,
+} from "aws-cdk-lib/aws-apigatewayv2-authorizers";
 
 const app = new cdk.App();
 
@@ -24,7 +28,11 @@ const bucket = s3.Bucket.fromBucketName(
   "nodejs-aws-shop-import-service"
 );
 
-const queue = sqs.Queue.fromQueueArn(stack, 'CatalogItemsQueue', process.env.CATALOG_ITEMS_QUEUE_ARN!)
+const queue = sqs.Queue.fromQueueArn(
+  stack,
+  "CatalogItemsQueue",
+  process.env.CATALOG_ITEMS_QUEUE_ARN!
+);
 
 const sharedLambdaProps: Partial<NodejsFunctionProps> = {
   runtime: lambda.Runtime.NODEJS_18_X,
@@ -76,11 +84,25 @@ bucket.addEventNotification(
 const api = new apiGateway.HttpApi(stack, "ImportApi", {
   corsPreflight: {
     allowHeaders: ["*"],
-    allowOrigins: ["*"],
+    allowOrigins: ["https://d2za0p8r8k37bf.cloudfront.net"],
     allowMethods: [apiGateway.CorsHttpMethod.ANY],
-    allowCredentials: false,
+    allowCredentials: true,
   },
 });
+
+const basicAuthorizer = lambda.Function.fromFunctionName(
+  stack,
+  "ImportBasicAuthorizerLambda",
+  "basicAuthorizer"
+);
+
+const authorizer = new HttpLambdaAuthorizer(
+  "BasicAuthorizer",
+  basicAuthorizer,
+  {
+    responseTypes: [HttpLambdaResponseType.IAM],
+  }
+);
 
 api.addRoutes({
   integration: new HttpLambdaIntegration(
@@ -89,4 +111,5 @@ api.addRoutes({
   ),
   path: "/import",
   methods: [apiGateway.HttpMethod.GET],
+  authorizer,
 });

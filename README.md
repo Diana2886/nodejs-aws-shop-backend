@@ -6,7 +6,7 @@ Links to Product Service API: [/products](https://ic4qlwt2a5.execute-api.eu-west
 
 [/products/{productId}](https://ic4qlwt2a5.execute-api.eu-west-1.amazonaws.com/products/1a2b3c4d-1234-5678-abcd-1234567890ab) - example
 
-The link to the Import Service API: [/import](https://wo9elbcrc1.execute-api.eu-west-1.amazonaws.com/import?name=testfile.csv)
+The link to the Import Service API: [/import](https://81c6f6is60.execute-api.eu-west-1.amazonaws.com/import?name=testfile.csv)
 
 Product Service Swagger documentation openapi.yaml is in the product-service folder
 Import Service Swagger documentation openapi.yaml is in the import-service folder
