@@ -49,6 +49,7 @@ export const getProductsList = async () => {
           title: product.title.S,
           description: product.description.S,
           price: parseInt(product.price.N),
+          image: product.image.S,
           count: stocksMap[productId] || 0,
         };
       }) || [];
@@ -104,12 +105,15 @@ export const createProduct = async (newProduct: AvailableProduct) => {
     const price = Number(newProduct.price);
     const count = Number(newProduct.count) || 0;
     const id = newProduct.id || uuidv4();
+    const image =
+      newProduct.image || "https://source.unsplash.com/300x400/?book";
 
     const productItem: Record<string, AttributeValue> = {
       id: { S: id },
       title: { S: title },
       description: { S: description },
       price: { N: price.toString() },
+      image: { S: image },
     };
 
     const stockItem: Record<string, AttributeValue> = {
@@ -144,6 +148,7 @@ export const createProduct = async (newProduct: AvailableProduct) => {
         title,
         description,
         price,
+        image,
         count,
       };
     } catch (err) {

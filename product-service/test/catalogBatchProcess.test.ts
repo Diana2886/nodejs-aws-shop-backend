@@ -31,6 +31,7 @@ describe('Lambda handler function', () => {
       title: 'Test3',
       description: 'Description',
       price: 11,
+      image: 'https://source.unsplash.com/300x400/?book',
       count: 7,
     });
 
