@@ -1,4 +1,4 @@
-import { Controller, Get, All, Req, Res } from '@nestjs/common';
+import { Controller, All, Req, Res } from '@nestjs/common';
 import { AppService } from './app.service';
 import axios from 'axios';
 import 'dotenv/config';
@@ -6,7 +6,6 @@ import * as NodeCache from 'node-cache';
 
 @Controller()
 export class AppController {
-  // private productCache = new NodeCache({ stdTTL: 120 });
   private productCache: NodeCache;
 
   constructor(private readonly appService: AppService) {
@@ -39,6 +38,9 @@ export class AppController {
           method: req.method,
           url: `${recipientURL}${req.originalUrl}`,
           ...(Object.keys(req.body || {}).length > 0 && { data: req.body }),
+          headers: {
+            Authorization: req.headers['authorization'],
+          },
         };
 
         console.log('axiosConfig: ', axiosConfig);
@@ -64,9 +66,5 @@ export class AppController {
     } else {
       res.status(502).json({ error: 'Cannot process request' });
     }
-  }
-  @Get()
-  getHello(): string {
-    return this.appService.getHello();
   }
 }
