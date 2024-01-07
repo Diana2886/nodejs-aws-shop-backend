@@ -1,0 +1,201 @@
+openapi: 3.0.0
+info:
+  title: Cart API
+  version: 1.0.0
+  description: API for managing user carts
+servers:
+  - url: https://gu1ycvk18c.execute-api.eu-west-1.amazonaws.com/api
+
+paths:
+  /api/profile/cart:
+    get:
+      summary: Get user cart
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: OK
+                  data:
+                    type: object
+                    properties:
+                      cart:
+                        $ref: '#/components/schemas/Cart'
+                      total:
+                        type: number
+                        example: 200
+
+    put:
+      summary: Update user cart
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CartUpdateRequestNew'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: OK
+                  data:
+                    type: object
+                    properties:
+                      cart:
+                        $ref: '#/components/schemas/Cart'
+                      total:
+                        type: number
+                        example: 200
+
+    post:
+      summary: Checkout user cart
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CartUpdateRequestNew'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: OK
+                  data:
+                    type: object
+                    properties:
+                      order:
+                        $ref: '#/components/schemas/Order'
+
+    delete:
+      summary: Clear user cart
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: OK
+
+components:
+  schemas:
+    Cart:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "f9df7258-e565-431d-9f17-5c29e4303cdd"
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              product:
+                type: object
+                properties:
+                  title:
+                    type: string
+                    example: "test-product2"
+                  description:
+                    type: string
+                    example: "description"
+                  price:
+                    type: number
+                    example: 20
+              count:
+                type: integer
+                example: 10
+
+
+    CartUpdateRequestNew:
+      type: object
+      properties:
+        product:
+          type: object
+          properties:
+            id:
+              type: string
+              example: "7567ec4b-b10c-48c5-9345-fc73c48a80aa"
+            title:
+              type: string
+              example: "ProductOne"
+            description:
+              type: string
+              example: "Short Product Description1"
+            price:
+              type: number
+              example: 24
+        count:
+          type: integer
+          example: 1
+      required:
+        - product
+        - count
+
+    Order:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "c5f8a79e-d0e2-473a-a0b7-881a9762c30a"
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              product:
+                type: object
+                properties:
+                  title:
+                    type: string
+                    example: "test-product2"
+                  description:
+                    type: string
+                    example: "description"
+                  price:
+                    type: number
+                    example: 20
+              count:
+                type: integer
+                example: 10
+        cartId:
+          type: string
+          example: "416bf7a7-202d-4843-9a92-15b371d0f1d5"
+        total:
+          type: number
+          example: 200
+        status:
+          type: string
+          example: "inProgress"

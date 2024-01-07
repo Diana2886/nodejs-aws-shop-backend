@@ -5,6 +5,7 @@ export const ProductSchema = Yup.object({
   title: Yup.string().required().default(""),
   description: Yup.string().required().default(""),
   price: Yup.number().required().defined().min(0),
+  image: Yup.string().default("https://source.unsplash.com/300x400/?book"),
 });
 
 export const AvailableProductSchema = ProductSchema.shape({
