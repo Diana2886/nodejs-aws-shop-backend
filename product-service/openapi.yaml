@@ -24,11 +24,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: Internal Server Error occurred
+                $ref: '#/components/schemas/Error'
 
     post:
       summary: Create a new product
@@ -81,21 +77,13 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: Product not found
+                $ref: '#/components/schemas/Error'
         '500':
           description: Internal Server Error
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: Internal Server Error occurred
+                $ref: '#/components/schemas/Error'
 
 components:
   schemas:
@@ -115,13 +103,16 @@ components:
         price:
           type: number
           description: The price of the product
+        image:
+          type: string
+          description: URL of the product image
+        count:
+          type: number
+          description: The count of the product
 
     NewProduct:
       type: object
       properties:
-        id:
-          type: string
-          description: The unique identifier for the product
         title:
           type: string
           description: The title of the product
@@ -131,6 +122,9 @@ components:
         price:
           type: number
           description: The price of the product
+        image:
+          type: string
+          description: URL of the product image
         count:
           type: number
           description: The count of the product
