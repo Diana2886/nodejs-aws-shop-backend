@@ -1,3 +1,3 @@
-id,title,description,price,count
-000b3c4d-1234-5678-abcd-1234567890ab,Test0,Description,15,9
-001b3c4d-1234-5678-abcd-1234567890ab,Test1,Description,4,3
+title,description,price,image,count
+Book1,A classic novel,12,https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT-1FGRLQjvOlmhzYG0eNNv_Y5NClfu8O31Dg&usqp=CAU,9
+Book2,A classic novel,10,,8
